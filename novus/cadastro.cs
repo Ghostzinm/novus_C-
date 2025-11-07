@@ -27,13 +27,14 @@ namespace novus
         {
             Form1 form = new Form1();
             form.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             string email = textBoxEmail.Text;
             string nome = textBoxNome.Text;
+            string tel = textBoxTel.Text;
             string senha = textBoxSenha.Text;
             string csenha = textBoxCSenha.Text;
 
@@ -45,7 +46,58 @@ namespace novus
                 return;
             }
 
-            if ( !email.Contains("@") || !email.Contains("."))
+            if (string.IsNullOrWhiteSpace(email)) 
+            {
+                MessageBox.Show("Por favor, insira um email.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(nome)) 
+            {
+                MessageBox.Show("Por favor, insira um nome.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(senha)) 
+            {
+                MessageBox.Show("Por favor, insira uma senha.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            //validação de senha com numero letras e caracteres especiais e tamanho minimo de 6 caracteres
+
+            if (!senha.Any(char.IsDigit) || !senha.Any(char.IsLetter) || !senha.Any(ch => !char.IsLetterOrDigit(ch)))
+            {
+                MessageBox.Show("A senha deve conter pelo menos um número, uma letra e um caractere especial.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (senha != "Digite sua senha" && senha.Length < 6)
+            {
+                MessageBox.Show("A senha deve ter pelo menos 6 caracteres.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            if (string.IsNullOrWhiteSpace(csenha)) 
+            {
+                MessageBox.Show("Por favor, confirme sua senha.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (tel != "Digite seu Telefone" && tel.Length < 10)
+            {
+                MessageBox.Show("Por favor, insira um telefone válido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (tel != "Digite seu Telefone" && !tel.All(char.IsDigit))
+            {
+                MessageBox.Show("O telefone deve conter apenas números.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!email.Contains("@") || !email.Contains("."))
             {
                 MessageBox.Show("Por favor, insira um email válido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -56,26 +108,45 @@ namespace novus
                 MessageBox.Show("As senhas não coincidem.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+
+
             else
             {
 
                 using (MySqlConnection conexao = new MySqlConnection(conexaoBanco))
                 {
+
                     try
                     {
+
+
                         conexao.Open();
-                        string query = "INSERT INTO tb_cadastro (email, nome, senha) VALUES (@Email, @Nome, @Senha)";
+                        string checkQuery = "SELECT COUNT(*) FROM tb_cadastro WHERE email = @Email";
+                        MySqlCommand checkCmd = new MySqlCommand(checkQuery, conexao);
+                        checkCmd.Parameters.AddWithValue("@Email", email);
+                        int userCount = Convert.ToInt32(checkCmd.ExecuteScalar());
+                        if (userCount > 0)
+                        {
+                            MessageBox.Show("Este email já está cadastrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        else
+                        {
+                            string query = "INSERT INTO tb_cadastro (email, nome, senha, telefone) VALUES (@Email, @Nome, @Senha, @telefone)";
 
-                        MySqlCommand cmd = new MySqlCommand(query, conexao);
-                        cmd.Parameters.AddWithValue("@Email", email);
-                        cmd.Parameters.AddWithValue("@Nome", nome);
-                        cmd.Parameters.AddWithValue("@Senha", senha);
-                        cmd.ExecuteNonQuery();
+                            MySqlCommand cmd = new MySqlCommand(query, conexao);
+                            cmd.Parameters.AddWithValue("@Email", email);
+                            cmd.Parameters.AddWithValue("@Nome", nome);
+                            cmd.Parameters.AddWithValue("@Senha", senha);
+                            cmd.Parameters.AddWithValue("@telefone", tel);
+                            cmd.ExecuteNonQuery();
 
-                        MessageBox.Show("Cadastro realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        Form1 form = new Form1();
-                        form.Show();
-                        this.Hide();
+                            MessageBox.Show("Cadastro realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Form1 form = new Form1();
+                            form.Show();
+                            this.Hide();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -83,7 +154,7 @@ namespace novus
                     }
                 }
             }
-        } 
+        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -94,14 +165,18 @@ namespace novus
         {
             textBoxEmail.Text = "Digite seu email";
             textBoxNome.Text = "Digite seu nome";
+            textBoxTel.Text = "Digite seu Telefone";
             textBoxSenha.Text = "Digite sua senha";
             textBoxCSenha.Text = "Confirme sua senha";
 
             textBoxEmail.Text = "Digite seu email";
             textBoxSenha.Text = "Digite sua senha";
+            textBoxNome.Text = "Digite seu nome";
+            textBoxTel.Text = "Digite seu Telefone";
 
             textBoxEmail.ForeColor = Color.Gray;
             textBoxNome.ForeColor = Color.Gray;
+            textBoxTel.ForeColor = Color.Gray;
             textBoxSenha.ForeColor = Color.Gray;
             textBoxCSenha.ForeColor = Color.Gray;
 
@@ -119,6 +194,23 @@ namespace novus
                 {
                     textBoxEmail.Text = "Digite seu email";
                     textBoxEmail.ForeColor = Color.Gray;
+                }
+            };
+
+            textBoxTel.Enter += (s, ev) =>
+            {
+                if (textBoxTel.Text == "Digite seu Telefone")
+                {
+                    textBoxTel.Text = "";
+                    textBoxTel.ForeColor = Color.Black;
+                }
+            };
+            textBoxTel.Leave += (s, ev) =>
+            {
+                if (string.IsNullOrWhiteSpace(textBoxTel.Text))
+                {
+                    textBoxTel.Text = "Digite seu Telefone";
+                    textBoxTel.ForeColor = Color.Gray;
                 }
             };
 
@@ -180,6 +272,26 @@ namespace novus
                 }
 
             };
+
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxEmail_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxNome_TextChanged(object sender, EventArgs e)
+        {
 
         }
     }

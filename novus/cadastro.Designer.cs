@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(cadastro));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.textBoxTel = new System.Windows.Forms.TextBox();
             this.textBoxCSenha = new System.Windows.Forms.TextBox();
             this.textBoxSenha = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -48,6 +49,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(9)))), ((int)(((byte)(9)))));
+            this.panel1.Controls.Add(this.textBoxTel);
             this.panel1.Controls.Add(this.textBoxCSenha);
             this.panel1.Controls.Add(this.textBoxSenha);
             this.panel1.Controls.Add(this.button2);
@@ -60,16 +62,24 @@
             this.panel1.Size = new System.Drawing.Size(600, 374);
             this.panel1.TabIndex = 1;
             // 
+            // textBoxTel
+            // 
+            this.textBoxTel.Location = new System.Drawing.Point(356, 179);
+            this.textBoxTel.Name = "textBoxTel";
+            this.textBoxTel.Size = new System.Drawing.Size(216, 20);
+            this.textBoxTel.TabIndex = 8;
+            this.textBoxTel.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // textBoxCSenha
             // 
-            this.textBoxCSenha.Location = new System.Drawing.Point(356, 238);
+            this.textBoxCSenha.Location = new System.Drawing.Point(356, 231);
             this.textBoxCSenha.Name = "textBoxCSenha";
             this.textBoxCSenha.Size = new System.Drawing.Size(216, 20);
             this.textBoxCSenha.TabIndex = 7;
             // 
             // textBoxSenha
             // 
-            this.textBoxSenha.Location = new System.Drawing.Point(356, 200);
+            this.textBoxSenha.Location = new System.Drawing.Point(356, 205);
             this.textBoxSenha.Name = "textBoxSenha";
             this.textBoxSenha.Size = new System.Drawing.Size(216, 20);
             this.textBoxSenha.TabIndex = 6;
@@ -78,7 +88,7 @@
             // 
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(136)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(391, 280);
+            this.button2.Location = new System.Drawing.Point(397, 269);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(136, 29);
             this.button2.TabIndex = 5;
@@ -88,10 +98,11 @@
             // 
             // textBoxEmail
             // 
-            this.textBoxEmail.Location = new System.Drawing.Point(356, 165);
+            this.textBoxEmail.Location = new System.Drawing.Point(356, 153);
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new System.Drawing.Size(216, 20);
             this.textBoxEmail.TabIndex = 3;
+            this.textBoxEmail.TextChanged += new System.EventHandler(this.textBoxEmail_TextChanged);
             // 
             // textBoxNome
             // 
@@ -99,6 +110,7 @@
             this.textBoxNome.Name = "textBoxNome";
             this.textBoxNome.Size = new System.Drawing.Size(216, 20);
             this.textBoxNome.TabIndex = 2;
+            this.textBoxNome.TextChanged += new System.EventHandler(this.textBoxNome_TextChanged);
             // 
             // panel2
             // 
@@ -110,6 +122,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(296, 370);
             this.panel2.TabIndex = 1;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // button1
             // 
@@ -172,11 +185,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(797, 450);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "cadastro";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "cadastro";
             this.Load += new System.EventHandler(this.cadastro_Load);
             this.panel1.ResumeLayout(false);
@@ -201,5 +215,6 @@
         private System.Windows.Forms.TextBox textBoxCSenha;
         private System.Windows.Forms.TextBox textBoxSenha;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TextBox textBoxTel;
     }
 }
